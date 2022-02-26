@@ -1,48 +1,100 @@
+import 'package:custom_painter/icons/h.dart';
 import 'package:flutter/material.dart';
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final double _width = 80;
+  double _height = 80;
+
+  final Widget _plus = Image.asset(
+    './lib/icons/icons8-plus-48 (1).png',
+    width: 30,
+    height: 30,
+  );
+  Widget _iconsStack(BuildContext context) => Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Image.asset(
+            './lib/icons/Key-icon.png',
+            width: 25,
+            height: 25,
+          ),
+          Image.asset(
+            './lib/icons/Folder-icon.png',
+            width: 25,
+            height: 25,
+          ),
+          Image.asset(
+            './lib/icons/Search-icon.png',
+            width: 25,
+            height: 25,
+          ),
+        ],
+      );
+  late Widget _myWdget = _plus;
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: const Color(0xffFFE2E2),
-      body: Stack(
-        children: [
-          Positioned(
-            bottom: 60,
-            left: size.width * 0.5 - size.width * 0.10,
-            child: SizedBox(
-              height: size.width * 0.20,
-              width: size.width * 0.20,
-              child: FittedBox(
-                child: FloatingActionButton(
-                  elevation: 0.0,
-                  backgroundColor: Color(0xffAAAAAA),
-                  onPressed: () {},
-                  child: const Icon(Icons.add),
-                ),
-              ),
+      body: FocusScope(
+        child: Stack(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(bottom: size.width * 0.17),
+              child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _height == 80 ? _height += 100 : _height -= 100;
+
+                        _myWdget == _plus
+                            ? _myWdget = _iconsStack(context)
+                            : _myWdget = _plus;
+                      });
+                    },
+                    child: AnimatedContainer(
+                      width: _width,
+                      height: _height,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular((_width) / 2),
+                          color: const Color(0xffAAAAAA)),
+                      child: AnimatedSwitcher(
+                        child: _myWdget,
+                        duration: const Duration(milliseconds: 1000),
+                      ),
+                      duration: const Duration(milliseconds: 1000),
+                      curve: Curves.fastOutSlowIn,
+                    ),
+                  )),
             ),
-          ),
-          Positioned(
-              bottom: 0,
-              left: 0,
-              child: SizedBox(
-                width: size.width,
-                height: 100,
-                child: Stack(
-                  clipBehavior: Clip.hardEdge,
-                  children: [
-                    CustomPaint(
-                      size: Size(size.width, 100),
-                      painter: CustomPainterNav(),
-                    )
-                  ],
-                ),
-              ))
-        ],
+            Positioned(
+                bottom: 0,
+                left: 0,
+                child: SizedBox(
+                  width: size.width,
+                  height: 100,
+                  child: Stack(
+                    clipBehavior: Clip.hardEdge,
+                    children: [
+                      CustomPaint(
+                        size: Size(size.width, 100),
+                        painter: CustomPainterNav(),
+                      )
+                    ],
+                  ),
+                )),
+          ],
+        ),
       ),
     );
   }
